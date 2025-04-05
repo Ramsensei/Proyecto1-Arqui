@@ -8,6 +8,7 @@ output_file = "output.img"
 input_data = []
 output_data = []
 width = 0
+new_width = 0
 
 # Función para leer el archivo de entrada
 def read_input_file():
@@ -31,9 +32,11 @@ def read_input_file():
 
 # Función para escribir el archivo de salida
 def write_output_file():
-    global output_data
+    global output_data, new_width
     try:
         with open(output_file, "wb") as f:
+            # Escribir el ancho de la nueva imagen
+            f.write(bytes([new_width]))
             # Convertir el array de enteros a bytes y escribir en el archivo
             f.write(bytes(output_data))
     except Exception as e:
@@ -42,20 +45,34 @@ def write_output_file():
 
 # Función para realizar la interpolación bilineal
 def bilinear_interpolation():
-    global input_data, output_data, width
-    height = len(input_data) // width
-    output_data = [0] * (width * height) * 2
+    global input_data, output_data, width, new_width
+    new_width = width * 3 - 2
+    output_data = [0] * (new_width ** 2)
 
-    for y in range(height - 1):
-        for x in range(width - 1):
-            # Obtener los cuatro píxeles que rodean el píxel a interpolar
-            p1 = input_data[y * width + x]
-            p2 = input_data[y * width + (x + 1)]
-            p3 = input_data[(y + 1) * width + x]
-            p4 = input_data[(y + 1) * width + (x + 1)]
+    # Copiar los valores de la imagen original a la nueva imagen en las posiciones correctas
+    for y in range(width):
+        for x in range(width):
+            try:
+                output_data[y * new_width * 3 + x * 3] = input_data[y * width + x]
+            except:
+                print(f"Error al copiar los datos de entrada a la salida: y={y}, x={x}")
+                exit(1)
 
-            # Realizar la interpolación bilineal
-            output_data[y * width + x] = (p1 + p2 + p3 + p4) // 4
+    # Interpolar los valores de las columnas multiplos de 3
+    for y in range(new_width):
+        for x in range(width):
+            if(output_data[y * new_width + x * 3] == 0):
+                # Interpolar el valor de la columna
+                output_data[y * new_width + x * 3] = round(((3 - y%3) * output_data[(y - y%3) * new_width + x * 3] + (y%3) * output_data[(y + 3 - y%3) * new_width + x * 3]) / 3)
+
+    # Interpolar los valores de las filas
+    for y in range(new_width):
+        for x in range(new_width):
+            if(output_data[y * new_width + x] == 0):
+                # Interpolar el valor de la fila
+                output_data[y * new_width + x] = round(((3 - x%3) * output_data[y * new_width + (x - x%3)] + (x%3) * output_data[y * new_width + (x + 3 - x%3)]) / 3)
+            
+
 
     print(f"Datos de salida: {output_data}")
 
