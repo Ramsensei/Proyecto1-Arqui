@@ -16,13 +16,13 @@ def read_input_file():
     try:
         with open(input_file, "rb") as f:
             # Leer el archivo como un array de bytes
-            byte_data = f.read()
             # Obtener el ancho de la imagen
-            width = byte_data[0]
+            width = int.from_bytes(f.read(2), "big")
+            byte_data = f.read()
             # Convertir los bytes a un array de enteros
-            input_data = list(byte_data[1:])
+            input_data = list(byte_data)
             print(f"Ancho de la imagen: {width}")
-            print(f"Datos de entrada: {input_data}")
+            # print(f"Datos de entrada: {input_data}")
     except FileNotFoundError:
         print(f"Error: El archivo {input_file} no se encontró.")
         exit(1)
@@ -36,7 +36,7 @@ def write_output_file():
     try:
         with open(output_file, "wb") as f:
             # Escribir el ancho de la nueva imagen
-            f.write(bytes([new_width]))
+            f.write(new_width.to_bytes(2, "big"))  # Guardar el ancho como 2 bytes
             # Convertir el array de enteros a bytes y escribir en el archivo
             f.write(bytes(output_data))
     except Exception as e:
@@ -47,6 +47,7 @@ def write_output_file():
 def bilinear_interpolation():
     global input_data, output_data, width, new_width
     new_width = width * 3 - 2
+    print(f"Nuevo ancho de la imagen: {new_width}")
     output_data = [0] * (new_width ** 2)
 
     # Copiar los valores de la imagen original a la nueva imagen en las posiciones correctas
@@ -74,12 +75,21 @@ def bilinear_interpolation():
             
 
 
-    print(f"Datos de salida: {output_data}")
+    # print(f"Datos de salida: {output_data}")
 
 # Función principal
 def main():
     read_input_file()
     bilinear_interpolation()
+    # Revisar que no haya bytes mayores a 255
+    for i in input_data:
+        if(i > 255 or i < 0):
+            print(f"Error: El valor {i} es mayor a 255.")
+            exit(1)
+    for i in output_data:
+        if(i > 255 or i < 0):
+            print(f"Error: El valor {i} es mayor a 255.")
+            exit(1)
     write_output_file()
     print("Interpolación completada y guardada en output.img.")
 
