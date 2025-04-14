@@ -64,14 +64,45 @@ def bilinear_interpolation():
         for x in range(width):
             if(output_data[y * new_width + x * 3] == 0):
                 # Interpolar el valor de la columna
-                output_data[y * new_width + x * 3] = round(((3 - y%3) * output_data[(y - y%3) * new_width + x * 3] + (y%3) * output_data[(y + 3 - y%3) * new_width + x * 3]) / 3)
+                ymod3 = y % 3
+                _3mymod3 = 3 - ymod3
+                ymymod3 = y - ymod3
+                yp3mymod3 = y + _3mymod3
+                ymymod3tnewwidth = ymymod3 * new_width
+                yp3mymod3tnewwidth = yp3mymod3 * new_width
+                ytnewwidth = y * new_width
+                xt3 = x * 3
+                index1 = ymymod3tnewwidth + xt3
+                index2 = yp3mymod3tnewwidth + xt3
+                index3 = ytnewwidth + xt3
+                data1 = output_data[index1]
+                data2 = output_data[index2]
+                weight1 = _3mymod3 * data1
+                weight2 = ymod3 * data2
+                sum_weights = weight1 + weight2
+                output_data[index3] = sum_weights // 3
+
 
     # Interpolar los valores de las filas
     for y in range(new_width):
         for x in range(new_width):
             if(output_data[y * new_width + x] == 0):
                 # Interpolar el valor de la fila
-                output_data[y * new_width + x] = round(((3 - x%3) * output_data[y * new_width + (x - x%3)] + (x%3) * output_data[y * new_width + (x + 3 - x%3)]) / 3)
+                xmod3 = x % 3
+                _3mxmod3 = 3 - xmod3
+                xmxmod3 = x - xmod3
+                xp3mxmod3 = x + _3mxmod3
+                ytnewwidth = y * new_width
+                index1 = ytnewwidth + xmxmod3
+                index2 = ytnewwidth + xp3mxmod3
+                index3 = ytnewwidth + x
+                data1 = output_data[index1]
+                data2 = output_data[index2]
+                weight1 = _3mxmod3 * data1
+                weight2 = xmod3 * data2
+                sum_weights = weight1 + weight2
+                output_data[index3] = sum_weights // 3
+
             
 
 
@@ -95,3 +126,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+    # new_width = 2
+    # output_data = [10, 20, 30, 40]
+    # output_file = "input.img"
+    # write_output_file()

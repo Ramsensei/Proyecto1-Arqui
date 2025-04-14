@@ -78,9 +78,9 @@ def main():
     jpg2img(INPUT_IMG, "quadrant.jpg")
 
     # Ejecutar ensamblador
-    # subprocess.run(["./interpolador_asm", "input.img", "output.img"])
+    subprocess.run(["./interpolador_asm"])
     # Ejecutar el script de interpolación
-    interpolador_main()
+    # interpolador_main()
 
     # Convertir el resultado a JPG
     img2jpg(OUTPUT_IMG, OUTPUT_JPG)
