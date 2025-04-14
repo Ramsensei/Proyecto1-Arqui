@@ -30,12 +30,17 @@ make python3
 El programa permite seleccionar un cuadrante de la imagen de entrada para realizar la interpolación. Los cuadrantes están numerados del 1 al 16, organizados en una cuadrícula de 4x4.
 
 ## Estructura del proyecto
-main.py: Script principal que coordina la ejecución del programa.
-Interpolador.py: Implementación en Python de la lógica de lectura, escritura y preparación de datos para el interpolador.
-Interpolador.asm: Código ensamblador que realiza la interpolación bilineal.
-makefile: Archivo para compilar el código ensamblador.
-input.img y output.img: Archivos de entrada y salida en formato binario.
-LICENSE: Licencia del proyecto.
+`main.py`: Script principal que coordina la ejecución del programa.
+
+`Interpolador.py`: Implementación en Python de la lógica de lectura, escritura y preparación de datos para el interpolador.
+
+`Interpolador.asm`: Código ensamblador que realiza la interpolación bilineal.
+
+`makefile`: Archivo para compilar el código ensamblador.
+
+`input.img y output.img`: Archivos de entrada y salida en formato binario.
+
+`LICENSE`: Licencia del proyecto.
 
 ## Notas importantes
 Asegúrate de que la imagen de entrada sea cuadrada y divisible por 4. De lo contrario, el programa no funcionará correctamente.
