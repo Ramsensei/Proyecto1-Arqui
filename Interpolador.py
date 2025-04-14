@@ -94,4 +94,8 @@ def main():
     print("Interpolación completada y guardada en output.img.")
 
 if __name__ == "__main__":
-    main()
+    # main()
+    new_width = 2
+    output_data = [10, 20, 30, 40]
+    output_file = "input.img"
+    write_output_file()
