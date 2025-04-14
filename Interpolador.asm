@@ -235,7 +235,7 @@ loop_y:
 loop_x:
     mov ax, [x]
     cmp ax, [width]         ; Compare x with width
-    jge next_row2           ; If x >= width, go to next row
+    jg next_row2           ; If x >= width, go to next row
 
     ; Calculate output_data[y * new_width + x * 3]
     mov ax, [y]              ; ax = y
@@ -350,7 +350,7 @@ outer_loop3:
 
 loop_y3:
     mov bx, [y]              ; Load y
-    cmp bx, cx              ; Compare y with new_width
+    cmp bx, [new_width]              ; Compare y with new_width
     jg end_interpolation  ; If y >= new_width, exit loop
 
     mov word [x], 0         ; x = 0 (reset inner loop counter)
@@ -358,7 +358,7 @@ loop_y3:
 loop_x3:
     mov ax, [x]
     cmp ax, [new_width]     ; Compare x with new_width
-    jge next_row3           ; If x >= new_width, go to next row
+    jg next_row3           ; If x >= new_width, go to next row
 
     ; Calculate output_data[y * new_width + x]
     mov ax, [y]              ; ax = y
